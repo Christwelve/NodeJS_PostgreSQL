@@ -3,8 +3,7 @@ import { pool } from '../elephant.js'
 
 const orderRoutes = express.Router();
 
-// pool.query('SELECT NOW()')
-// 	.then(data => console.log('data recieved', data));
+
 
 orderRoutes.get("/", async (req, res) => {
     try {
@@ -50,16 +49,15 @@ orderRoutes.put("/:id", async (req, res) => {
     }
 })
 
+orderRoutes.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { rows } = await pool.query('DELETE FROM orders WHERE id=$1 RETURNING *;', [id]);
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
-// orderRoutes.delete("/:id", async (req, res) => {
-//     const { id } = req.params;
-//     try {
-//         const { rows } = await pool.query('DELETE FROM orders WHERE id=$1 RETURNING *;', [id]);
-//         res.json(rows[0]);
-//     } catch (err) {
-//         res.status(500).json(err);
-//     }
-// });
-// })
 
 export default orderRoutes;
