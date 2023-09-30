@@ -38,17 +38,17 @@ orderRoutes.post("/", async (req, res) => {
     }
 })
 
-// orderRoutes.put("/:id", async (req, res) => {
-//     const {name} = req.body;
-//     const {id} = req.params;
-//     try {
-//         const {rows} = await pool.query('UPDATE orders SET name=$1 WHERE id=$2 RETURNING *;', [name, id]);
-//         res.json(rows[0])
+orderRoutes.put("/:id", async (req, res) => {
+    const { price, date, user_id } = req.body;
+    const {id} = req.params;
+    try {
+        const {rows} = await pool.query('UPDATE orders SET price=$1, date=$2, user_id=$3 WHERE id=$4 RETURNING *;', [price, date, user_id, id]);
+        res.json(rows[0])
 
-//     } catch(err){
-//         res.status(500).json(err)
-//     }
-// })
+    } catch(err){
+        res.status(500).json(err)
+    }
+})
 
 
 // orderRoutes.delete("/:id", async (req, res) => {

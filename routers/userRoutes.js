@@ -38,17 +38,17 @@ userRoutes.post("/", async (req, res) => {
     }
 })
 
-// userRoutes.put("/:id", async (req, res) => {
-//     const {name} = req.body;
-//     const {id} = req.params;
-//     try {
-//         const {rows} = await pool.query('UPDATE users SET name=$1 WHERE id=$2 RETURNING *;', [name, id]);
-//         res.json(rows[0])
+userRoutes.put("/:id", async (req, res) => {
+    const { first_name, last_name, age } = req.body;
+    const {id} = req.params;
+    try {
+        const {rows} = await pool.query('UPDATE users SET first_name=$1, last_name=$2, age=$3 WHERE id=$4 RETURNING *;', [first_name, last_name, age, id]);
+        res.json(rows[0])
 
-//     } catch(err){
-//         res.status(500).json(err)
-//     }
-// })
+    } catch(err){
+        res.status(500).json(err)
+    }
+})
 
 
 // userRoutes.delete("/:id", async (req, res) => {
