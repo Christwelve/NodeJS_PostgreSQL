@@ -40,12 +40,34 @@ userRoutes.post("/", async (req, res) => {
 userRoutes.put("/:id", async (req, res) => {
     const { first_name, last_name, age } = req.body;
     const {id} = req.params;
-    try {
-        const {rows} = await pool.query('UPDATE users SET first_name=$1, last_name=$2, age=$3 WHERE id=$4 RETURNING *;', [first_name, last_name, age, id]);
-        res.json(rows[0])
 
-    } catch(err){
-        res.status(500).json(err)
+    let setClauses = [];
+    let values = [];
+    
+    if (first_name !== undefined) {
+        setClauses.push(`first_name = $${values.length + 1}`);
+        values.push(first_name);
+    }
+    if (last_name !== undefined) {
+        setClauses.push(`last_name = $${values.length + 1}`);
+        values.push(last_name);
+    }
+    if (!setClauses.length) {
+        return res.status(400).json({ message: "No fields provided to update" });
+    }
+
+    values.push(id);
+
+    const query = `UPDATE users SET ${setClauses.join(", ")} WHERE id = $${values.length} RETURNING *`;
+    console.log(query, 'query');
+    try {
+        const {rows} = await pool.query(query, values);
+        if (!rows.length) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json(rows[0]);
+    } catch(err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
     }
 })
 
