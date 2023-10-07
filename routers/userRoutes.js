@@ -1,9 +1,9 @@
 import express from 'express';
-import { pool } from '../elephant.js'
+import { pool } from '../elephant.js';
+import { body, validationResult } from 'express-validator';
+
 
 const userRoutes = express.Router();
-
-
 
 userRoutes.get("/", async (req, res) => {
     try {
@@ -73,6 +73,10 @@ userRoutes.put("/:id", validateUserPut, async (req, res) => {
     if (last_name !== undefined) {
         setClauses.push(`last_name = $${values.length + 1}`);
         values.push(last_name);
+    }
+    if (age !== undefined) {
+        setClauses.push(`age = $${values.length + 1}`);
+        values.push(age);
     }
     if (!setClauses.length) {
         return res.status(400).json({ message: "No fields provided to update" });

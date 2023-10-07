@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 
-createTables();
+// createTables();
 
 // pool.query('SELECT NOW()')
 // 	.then(data => console.log('data recieved', data)); 
